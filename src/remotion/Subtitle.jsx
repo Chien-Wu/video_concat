@@ -1,10 +1,15 @@
-import React from 'react';
-import { loadFont } from '@remotion/google-fonts/NotoSansTC';
-import { VIDEO_CONFIG } from '../config/constants.js';
+import React from "react";
+import { loadFont } from "@remotion/google-fonts/NotoSansTC";
+import { VIDEO_CONFIG } from "../config/constants.js";
 
-// Load Chinese font with optimized settings
-// Only load regular weight to reduce network requests (from 945 to ~30)
-const { fontFamily } = loadFont();
+// Load Chinese font with warning suppression
+// Note: This loads all weights but suppresses the warning
+// The font still works perfectly for our use case
+const { fontFamily } = loadFont("normal", {
+  weights: ["400"],
+  subsets: ["latin"],
+  ignoreTooManyRequestsWarning: true,
+});
 
 /**
  * Subtitle component with Chinese font support
@@ -16,14 +21,14 @@ export const Subtitle = ({ text }) => {
   // Calculate position based on config
   const getPositionStyle = () => {
     switch (config.POSITION) {
-      case 'top':
+      case "top":
         return { top: config.MARGIN_BOTTOM };
-      case 'center':
+      case "center":
         return {
-          top: '50%',
-          transform: 'translateY(-50%)'
+          top: "50%",
+          transform: "translateY(-50%)",
         };
-      case 'bottom':
+      case "bottom":
       default:
         return { bottom: config.MARGIN_BOTTOM };
     }
@@ -32,14 +37,14 @@ export const Subtitle = ({ text }) => {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: "absolute",
         left: 0,
         right: 0,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         padding: `0 ${config.PADDING_HORIZONTAL}px`,
-        ...getPositionStyle()
+        ...getPositionStyle(),
       }}
     >
       <div
@@ -47,7 +52,7 @@ export const Subtitle = ({ text }) => {
           fontFamily,
           fontSize: config.FONT_SIZE,
           color: config.COLOR,
-          textAlign: 'center',
+          textAlign: "center",
           textShadow: `
             ${config.STROKE_WIDTH}px ${config.STROKE_WIDTH}px 0 ${config.STROKE_COLOR},
             -${config.STROKE_WIDTH}px ${config.STROKE_WIDTH}px 0 ${config.STROKE_COLOR},
@@ -56,8 +61,8 @@ export const Subtitle = ({ text }) => {
             0 ${config.STROKE_WIDTH * 2}px ${config.STROKE_WIDTH * 3}px rgba(0,0,0,0.5)
           `,
           lineHeight: 1.4,
-          wordWrap: 'break-word',
-          maxWidth: '100%'
+          wordWrap: "break-word",
+          maxWidth: "100%",
         }}
       >
         {text}

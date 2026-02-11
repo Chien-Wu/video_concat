@@ -1,0 +1,29 @@
+name: Deploy to Hetzner
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy using SSH
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.SSH_KEY }}
+                  port: 22
+                  script: |
+                      set -e
+
+                      cd ~/video_concat
+
+                      git fetch --all
+                      git reset --hard origin/main
+
+                      npm install
+
+                      pm2 restart video-api --update-env

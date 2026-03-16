@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { API_CONFIG, STORAGE_CONFIG } from '../config/constants.js';
+import { API_CONFIG, STORAGE_CONFIG, VOICE_CONFIG } from '../config/constants.js';
 
 /**
  * Generate speech with character-level timestamps using ElevenLabs API
@@ -16,6 +16,12 @@ export async function generateSpeechWithTimestamps(text, jobId) {
     throw new Error('ElevenLabs API key or Voice ID not configured');
   }
 
+  // Clean text: remove literal \n escape sequences, normalize whitespace
+  const cleanText = text
+    .replace(/\\n/g, ' ')  // Replace literal \n with space
+    .replace(/\s+/g, ' ')  // Normalize multiple spaces
+    .trim();
+
   const url = `${API_CONFIG.ELEVENLABS.BASE_URL}/text-to-speech/${voiceId}/with-timestamps`;
 
   try {
@@ -26,8 +32,15 @@ export async function generateSpeechWithTimestamps(text, jobId) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        text,
-        model_id: API_CONFIG.ELEVENLABS.MODEL_ID
+        text: cleanText,
+        model_id: API_CONFIG.ELEVENLABS.MODEL_ID,
+        voice_settings: {
+          stability: VOICE_CONFIG.STABILITY,
+          similarity_boost: VOICE_CONFIG.SIMILARITY_BOOST,
+          style: VOICE_CONFIG.STYLE,
+          speed: VOICE_CONFIG.SPEED,
+          use_speaker_boost: VOICE_CONFIG.USE_SPEAKER_BOOST
+        }
       })
     });
 

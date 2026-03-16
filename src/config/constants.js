@@ -49,3 +49,12 @@ export const STORAGE_CONFIG = {
 export const QUEUE_CONFIG = {
   MAX_CONCURRENT: parseInt(process.env.MAX_CONCURRENT_JOBS || "2"),
 };
+
+export const VOICE_CONFIG = {
+  // Voice settings (easily changeable)
+  SPEED: 1.0, // 0.7 to 1.2 (1.0 = normal, 1.1 = 10% faster)
+  STABILITY: 0.5, // 0 to 1 (lower = more expressive, higher = more stable)
+  SIMILARITY_BOOST: 0.75, // 0 to 1 (controls voice consistency)
+  STYLE: 0, // 0 to 1 (lower = more natural, higher = more exaggerated)
+  USE_SPEAKER_BOOST: true, // Enhance clarity
+};

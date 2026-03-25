@@ -1,9 +1,69 @@
 import { VIDEO_CONFIG } from '../config/constants.js';
 
 /**
- * Smart subtitle segmentation based on ElevenLabs character-level alignment
- * This algorithm iterates through the alignment data and creates subtitle segments
- * based on punctuation, pauses, and maximum length constraints.
+ * Word-by-word subtitle segmentation
+ * Creates one subtitle per word for dynamic, TikTok-style captions
+ *
+ * @param {Object} alignment - ElevenLabs alignment object
+ * @returns {Array<{text: string, startTime: number, endTime: number}>}
+ */
+export function wordByWordSubtitles(alignment) {
+  const { characters, character_start_times_seconds, character_end_times_seconds } = alignment;
+
+  const words = [];
+  let currentWord = {
+    text: '',
+    start: 0,
+    end: 0
+  };
+
+  for (let i = 0; i < characters.length; i++) {
+    const char = characters[i];
+    const start = character_start_times_seconds[i];
+    const end = character_end_times_seconds[i];
+
+    // Check if this is a word boundary (space, punctuation, or newline)
+    const isWordBoundary = /[\s。！？.!?,;，；:：—\-]/.test(char);
+
+    if (isWordBoundary) {
+      // Save the current word if it has content
+      const trimmedText = currentWord.text.trim();
+      if (trimmedText.length > 0) {
+        words.push({
+          text: trimmedText,
+          startTime: currentWord.start,
+          endTime: currentWord.end
+        });
+      }
+
+      // Reset for next word
+      currentWord = { text: '', start: 0, end: 0 };
+    } else {
+      // Add character to current word
+      if (currentWord.text.length === 0) {
+        currentWord.start = start; // First character sets start time
+      }
+      currentWord.text += char;
+      currentWord.end = end; // Last character sets end time
+    }
+
+    // Handle last word if we're at the end
+    if (i === characters.length - 1 && currentWord.text.trim().length > 0) {
+      words.push({
+        text: currentWord.text.trim(),
+        startTime: currentWord.start,
+        endTime: currentWord.end
+      });
+    }
+  }
+
+  console.log(`[Alignment] Generated ${words.length} word-by-word subtitles`);
+  return words;
+}
+
+/**
+ * Phrase-based subtitle segmentation
+ * Creates subtitles based on punctuation, pauses, and maximum length constraints
  *
  * @param {Object} alignment - ElevenLabs alignment object
  * @param {string[]} alignment.characters - Array of characters
@@ -11,7 +71,7 @@ import { VIDEO_CONFIG } from '../config/constants.js';
  * @param {number[]} alignment.character_end_times_seconds - End times for each character
  * @returns {Array<{text: string, startTime: number, endTime: number}>}
  */
-export function smartSegmentSubtitles(alignment) {
+function phraseBasedSubtitles(alignment) {
   const { characters, character_start_times_seconds, character_end_times_seconds } = alignment;
 
   const phrases = [];
@@ -76,8 +136,25 @@ export function smartSegmentSubtitles(alignment) {
     }
   }
 
-  console.log(`[Alignment] Generated ${phrases.length} subtitle segments`);
+  console.log(`[Alignment] Generated ${phrases.length} phrase-based subtitles`);
   return phrases;
+}
+
+/**
+ * Smart subtitle segmentation - routes to appropriate algorithm based on config
+ * @param {Object} alignment - ElevenLabs alignment object
+ * @returns {Array<{text: string, startTime: number, endTime: number}>}
+ */
+export function smartSegmentSubtitles(alignment) {
+  const mode = VIDEO_CONFIG.SUBTITLE.MODE || 'phrase';
+
+  switch (mode) {
+    case 'word-by-word':
+      return wordByWordSubtitles(alignment);
+    case 'phrase':
+    default:
+      return phraseBasedSubtitles(alignment);
+  }
 }
 
 /**

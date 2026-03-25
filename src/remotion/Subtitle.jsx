@@ -51,6 +51,7 @@ export const Subtitle = ({ text }) => {
         style={{
           fontFamily,
           fontSize: config.FONT_SIZE,
+          fontWeight: config.FONT_WEIGHT,
           color: config.COLOR,
           textAlign: "center",
           textShadow: `

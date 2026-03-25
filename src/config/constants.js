@@ -16,14 +16,16 @@ export const VIDEO_CONFIG = {
 
   // Subtitle settings (easily changeable)
   SUBTITLE: {
+    MODE: "word-by-word", // Options: "phrase", "word-by-word", "sentence"
     FONT_SIZE: 90,
+    FONT_WEIGHT: 900, // 100-900 (400=normal, 700=bold, 900=black)
     COLOR: "#FFFFFF",
     STROKE_COLOR: "#000000",
-    STROKE_WIDTH: 3,
+    STROKE_WIDTH: 4,
     POSITION: "bottom", // Options: 'top', 'center', 'bottom'
     MARGIN_BOTTOM: 300,
     PADDING_HORIZONTAL: 40,
-    MAX_CHARS_PER_LINE: 80, // Increased from 20 to avoid losing text
+    MAX_CHARS_PER_LINE: 80, // Used in phrase mode only
   },
 
   // Alignment settings

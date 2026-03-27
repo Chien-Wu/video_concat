@@ -17,7 +17,7 @@ export const VIDEO_CONFIG = {
   // Subtitle settings (easily changeable)
   SUBTITLE: {
     MODE: "word-by-word", // Options: "phrase", "word-by-word", "sentence"
-    FONT_SIZE: 90,
+    FONT_SIZE: 140,
     FONT_WEIGHT: 900, // 100-900 (400=normal, 700=bold, 900=black)
     COLOR: "#FFFFFF",
     STROKE_COLOR: "#000000",

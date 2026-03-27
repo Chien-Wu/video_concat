@@ -26,9 +26,11 @@ export function wordByWordSubtitles(alignment) {
     const isWordBoundary = /[\s。！？.!?,;，；:：—\-]/.test(char);
 
     if (isWordBoundary) {
-      // Save the current word if it has content
+      // Save the current word if it has content and valid duration
       const trimmedText = currentWord.text.trim();
-      if (trimmedText.length > 0) {
+      const duration = currentWord.end - currentWord.start;
+
+      if (trimmedText.length > 0 && duration > 0) {
         words.push({
           text: trimmedText,
           startTime: currentWord.start,
@@ -49,11 +51,14 @@ export function wordByWordSubtitles(alignment) {
 
     // Handle last word if we're at the end
     if (i === characters.length - 1 && currentWord.text.trim().length > 0) {
-      words.push({
-        text: currentWord.text.trim(),
-        startTime: currentWord.start,
-        endTime: currentWord.end
-      });
+      const duration = currentWord.end - currentWord.start;
+      if (duration > 0) {
+        words.push({
+          text: currentWord.text.trim(),
+          startTime: currentWord.start,
+          endTime: currentWord.end
+        });
+      }
     }
   }
 

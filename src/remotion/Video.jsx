@@ -35,7 +35,8 @@ export const Video = ({ images, audioUrl, totalFrames, subtitles }) => {
       {/* Subtitles synchronized with speech */}
       {subtitles.map((subtitle, index) => {
         const from = Math.floor(subtitle.startTime * fps);
-        const duration = Math.floor((subtitle.endTime - subtitle.startTime) * fps);
+        // Use Math.ceil and ensure minimum 1 frame for very short words
+        const duration = Math.max(1, Math.ceil((subtitle.endTime - subtitle.startTime) * fps));
 
         return (
           <Sequence key={`subtitle-${index}`} from={from} durationInFrames={duration}>

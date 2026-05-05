@@ -29,6 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static video files
 app.use('/videos', express.static('public/videos'));
 
+// Serve avatar / static assets
+app.use('/assets', express.static('assets'));
+
 // Serve temporary files (for Remotion to access during rendering)
 app.use('/tmp', express.static('tmp'));
 

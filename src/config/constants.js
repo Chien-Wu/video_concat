@@ -7,6 +7,14 @@ export const VIDEO_CONFIG = {
 
   // Image settings
   IMAGE_COUNT: 8,
+  IMAGE: {
+    // Source images are horizontal; we letterbox them onto a black frame.
+    // Set the aspect ratio (width/height) used to compute where the image's
+    // bottom edge lands so the avatar can be anchored to it.
+    // Current source: 1072x864 ≈ 1.2407
+    ASPECT_RATIO: 1072 / 864,
+    BACKGROUND_COLOR: "#000000",
+  },
 
   // Transition settings (easily changeable)
   TRANSITION: {
@@ -32,6 +40,17 @@ export const VIDEO_CONFIG = {
   ALIGNMENT: {
     PAUSE_THRESHOLD: 0.3, // Seconds of silence to trigger new subtitle
     MIN_SUBTITLE_DURATION: 0.5, // Minimum subtitle display time
+  },
+
+  // Avatar settings (talking character anchored to image's bottom-left)
+  AVATAR: {
+    ENABLED: true,
+    SIZE: 420, // px, square
+    INSET_LEFT: 20, // px from image's left edge
+    INSET_BOTTOM: 0, // px above image's bottom edge (negative = below)
+    TOGGLE_EVERY_FRAMES: 4, // ~7.5Hz at 30fps, matches syllable rate
+    CLOSED_FILE: "alexander_closed.png",
+    OPEN_FILE: "alexander_open.png",
   },
 };
 

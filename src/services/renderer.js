@@ -50,7 +50,11 @@ export async function renderVideo(options, jobId, onProgress) {
       images: imageUrls,
       audioUrl: audioUrl,
       totalFrames,
-      subtitles
+      subtitles,
+      avatar: {
+        closedUrl: `${publicUrl}/assets/${VIDEO_CONFIG.AVATAR.CLOSED_FILE}`,
+        openUrl: `${publicUrl}/assets/${VIDEO_CONFIG.AVATAR.OPEN_FILE}`,
+      }
     };
 
     const composition = await selectComposition({

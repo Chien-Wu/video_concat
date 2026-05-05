@@ -25,7 +25,7 @@ export const ImageSlide = ({ src }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#000000',
+        backgroundColor: VIDEO_CONFIG.IMAGE.BACKGROUND_COLOR,
         ...transitionStyle
       }}
     >
@@ -34,7 +34,7 @@ export const ImageSlide = ({ src }) => {
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'cover'
+          objectFit: 'contain'
         }}
       />
     </div>

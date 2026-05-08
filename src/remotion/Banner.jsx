@@ -3,44 +3,30 @@ import { loadFont } from "@remotion/google-fonts/Manrope";
 import { VIDEO_CONFIG } from "../config/constants.js";
 
 const { fontFamily } = loadFont("normal", {
-  weights: ["400", "700", "800"],
+  weights: ["700", "800"],
   subsets: ["latin"],
 });
 
 /**
- * Subtitle component with Chinese font support
- * Styling is easily customizable via VIDEO_CONFIG
+ * Headline banner pinned to the top letterbox bar.
+ * Persists for the entire video.
  */
-export const Subtitle = ({ text }) => {
-  const config = VIDEO_CONFIG.SUBTITLE;
-
-  // Calculate position based on config
-  const getPositionStyle = () => {
-    switch (config.POSITION) {
-      case "top":
-        return { top: config.MARGIN_BOTTOM };
-      case "center":
-        return {
-          top: "50%",
-          transform: "translateY(-50%)",
-        };
-      case "bottom":
-      default:
-        return { bottom: config.MARGIN_BOTTOM };
-    }
-  };
+export const Banner = ({ text }) => {
+  const config = VIDEO_CONFIG.BANNER;
+  if (!text) return null;
 
   return (
     <div
       style={{
         position: "absolute",
+        top: config.TOP,
         left: 0,
         right: 0,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         padding: `0 ${config.PADDING_HORIZONTAL}px`,
-        ...getPositionStyle(),
+        pointerEvents: "none",
       }}
     >
       <div
@@ -50,6 +36,7 @@ export const Subtitle = ({ text }) => {
           fontWeight: config.FONT_WEIGHT,
           color: config.COLOR,
           textAlign: "center",
+          lineHeight: 1.15,
           textShadow: `
             ${config.STROKE_WIDTH}px ${config.STROKE_WIDTH}px 0 ${config.STROKE_COLOR},
             -${config.STROKE_WIDTH}px ${config.STROKE_WIDTH}px 0 ${config.STROKE_COLOR},
@@ -57,9 +44,12 @@ export const Subtitle = ({ text }) => {
             -${config.STROKE_WIDTH}px -${config.STROKE_WIDTH}px 0 ${config.STROKE_COLOR},
             0 ${config.STROKE_WIDTH * 2}px ${config.STROKE_WIDTH * 3}px rgba(0,0,0,0.5)
           `,
-          lineHeight: 1.4,
-          wordWrap: "break-word",
           maxWidth: "100%",
+          wordWrap: "break-word",
+          display: "-webkit-box",
+          WebkitLineClamp: config.MAX_LINES,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
         }}
       >
         {text}

@@ -33,6 +33,15 @@ export function validateGenerateRequest(body) {
     errors.push('Field "text" exceeds maximum length of 5000 characters');
   }
 
+  // Validate banner (optional)
+  if (body.banner !== undefined && body.banner !== null && body.banner !== '') {
+    if (typeof body.banner !== 'string') {
+      errors.push('Field "banner" must be a string');
+    } else if (body.banner.length > 200) {
+      errors.push('Field "banner" exceeds maximum length of 200 characters');
+    }
+  }
+
   return {
     isValid: errors.length === 0,
     errors

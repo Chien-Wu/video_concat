@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
  * @returns {Promise<string>} Path to rendered video
  */
 export async function renderVideo(options, jobId, onProgress) {
-  const { images, audioPath, duration, subtitles } = options;
+  const { images, audioPath, duration, subtitles, banner } = options;
 
   try {
     // Step 1: Bundle Remotion project
@@ -51,6 +51,7 @@ export async function renderVideo(options, jobId, onProgress) {
       audioUrl: audioUrl,
       totalFrames,
       subtitles,
+      banner: banner || '',
       avatar: {
         closedUrl: `${publicUrl}/assets/${VIDEO_CONFIG.AVATAR.CLOSED_FILE}`,
         openUrl: `${publicUrl}/assets/${VIDEO_CONFIG.AVATAR.OPEN_FILE}`,

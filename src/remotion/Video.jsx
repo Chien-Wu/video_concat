@@ -3,13 +3,14 @@ import { Audio, Sequence, useVideoConfig } from 'remotion';
 import { ImageSlide } from './ImageSlide.jsx';
 import { Subtitle } from './Subtitle.jsx';
 import { Avatar } from './Avatar.jsx';
+import { Banner } from './Banner.jsx';
 import { VIDEO_CONFIG } from '../config/constants.js';
 
 /**
  * Main video composition
  * Combines images, audio, and subtitles with precise timing
  */
-export const Video = ({ images, audioUrl, totalFrames, subtitles, avatar }) => {
+export const Video = ({ images, audioUrl, totalFrames, subtitles, avatar, banner }) => {
   const { fps } = useVideoConfig();
 
   // Calculate frame distribution for 8 images
@@ -55,6 +56,9 @@ export const Video = ({ images, audioUrl, totalFrames, subtitles, avatar }) => {
           subtitles={subtitles}
         />
       )}
+
+      {/* Headline banner pinned to top letterbox */}
+      {banner ? <Banner text={banner} /> : null}
     </>
   );
 };

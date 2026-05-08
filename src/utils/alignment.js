@@ -22,11 +22,17 @@ export function wordByWordSubtitles(alignment) {
     const start = character_start_times_seconds[i];
     const end = character_end_times_seconds[i];
 
-    // Check if this is a word boundary (space, punctuation, or newline)
-    const isWordBoundary = /[\s。！？.!?,;，；:：—\-]/.test(char);
+    // Drop double-quote characters from displayed subtitles (audio is
+    // unchanged — only the rendered text loses them).
+    if (/["“”]/.test(char)) continue;
+
+    // Word boundary = whitespace OR Chinese full-width punctuation only.
+    // Latin punctuation (,.!?:;-—) attached to a word like "Coca-Cola",
+    // "1:59", "8,000", "a.m.", "May 5,", "3:59.4" must stay glued to the
+    // word — splitting on those produces nonsense fragments.
+    const isWordBoundary = /[\s。！？，；：、]/.test(char);
 
     if (isWordBoundary) {
-      // Save the current word if it has content and valid duration
       const trimmedText = currentWord.text.trim();
       const duration = currentWord.end - currentWord.start;
 
@@ -38,27 +44,26 @@ export function wordByWordSubtitles(alignment) {
         });
       }
 
-      // Reset for next word
       currentWord = { text: '', start: 0, end: 0 };
     } else {
-      // Add character to current word
       if (currentWord.text.length === 0) {
-        currentWord.start = start; // First character sets start time
+        currentWord.start = start;
       }
       currentWord.text += char;
-      currentWord.end = end; // Last character sets end time
+      currentWord.end = end;
     }
+  }
 
-    // Handle last word if we're at the end
-    if (i === characters.length - 1 && currentWord.text.trim().length > 0) {
-      const duration = currentWord.end - currentWord.start;
-      if (duration > 0) {
-        words.push({
-          text: currentWord.text.trim(),
-          startTime: currentWord.start,
-          endTime: currentWord.end
-        });
-      }
+  // Flush any final word (the loop's `continue` for quotes can otherwise
+  // leave the last word unflushed if the very last char is a quote).
+  if (currentWord.text.trim().length > 0) {
+    const duration = currentWord.end - currentWord.start;
+    if (duration > 0) {
+      words.push({
+        text: currentWord.text.trim(),
+        startTime: currentWord.start,
+        endTime: currentWord.end
+      });
     }
   }
 

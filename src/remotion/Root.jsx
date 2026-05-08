@@ -22,6 +22,7 @@ export const RemotionRoot = () => {
           audioUrl: '',
           totalFrames: 300,
           subtitles: [],
+          banner: '',
           avatar: { closedUrl: '', openUrl: '' }
         }}
       />

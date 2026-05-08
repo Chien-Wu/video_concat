@@ -55,7 +55,7 @@ app.post('/api/generate', async (req, res) => {
       });
     }
 
-    const { images, text } = req.body;
+    const { images, text, banner } = req.body;
     const jobId = uuidv4();
 
     console.log(`[API] New video generation request: ${jobId}`);
@@ -96,7 +96,8 @@ app.post('/api/generate', async (req, res) => {
             images: localImagePaths,
             audioPath,
             duration,
-            subtitles
+            subtitles,
+            banner: typeof banner === 'string' ? banner.trim() : ''
           },
           jobId,
           onProgress

@@ -1,5 +1,6 @@
 import { bundle } from '@remotion/bundler';
 import { renderMedia, selectComposition } from '@remotion/renderer';
+import { mkdir } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { VIDEO_CONFIG, STORAGE_CONFIG } from '../config/constants.js';
@@ -26,8 +27,14 @@ export async function renderVideo(options, jobId, onProgress) {
     onProgress?.({ stage: 'bundling', progress: 10 });
 
     const remotionRoot = path.join(__dirname, '..', 'remotion', 'Root.jsx');
+    const jobTmpDir = path.resolve(STORAGE_CONFIG.TMP_DIR, jobId);
+    const bundleOutDir = path.join(jobTmpDir, 'remotion-bundle');
+    const bundlePublicDir = path.join(jobTmpDir, 'remotion-public');
+    await mkdir(bundlePublicDir, { recursive: true });
     const bundleLocation = await bundle({
       entryPoint: remotionRoot,
+      outDir: bundleOutDir,
+      publicDir: bundlePublicDir,
       webpackOverride: (config) => config
     });
 
